@@ -17,6 +17,7 @@ import RegistrationForm from "./components/RegistrationForm";
 import ExamSession from "./components/ExamSession";
 import ExamResultCard from "./components/ExamResultCard";
 import { UserRegistration, Question, AnswerDetail } from "./types";
+import { QUESTION_BANK } from "./data/questions";
 
 type Step = "registration" | "loading" | "exam" | "results";
 
@@ -41,26 +42,41 @@ export default function App() {
       const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
       await delay(800);
 
-      setLoadingText("Sincronizando banco de preguntas desde Google Docs...");
+      setLoadingText("Sincronizando banco de preguntas...");
       
       const headers: Record<string, string> = {
         "Accept": "application/json"
       };
 
-      const response = await fetch("/api/questions", { headers });
-      
-      if (!response.ok) {
-        throw new Error("No se pudo obtener el banco de preguntas del servidor.");
+      let fetchedQuestions: Question[] = [];
+      try {
+        const response = await fetch("/api/questions", { headers });
+        if (response.ok) {
+          const result = await response.json();
+          if (result.questions && Array.isArray(result.questions) && result.questions.length > 0) {
+            fetchedQuestions = result.questions;
+          }
+        } else {
+          console.warn("La respuesta del servidor no fue OK. Se utilizará el banco de preguntas local.");
+        }
+      } catch (err) {
+        console.warn("No se pudo conectar con el servidor para obtener las preguntas, usando banco de preguntas local:", err);
       }
 
-      const result = await response.json();
       await delay(600);
 
-      if (result.questions && Array.isArray(result.questions) && result.questions.length > 0) {
-        setQuestions(result.questions);
+      if (fetchedQuestions.length === 0) {
+        // Shuffle local QUESTION_BANK and take up to 30
+        const shuffled = [...QUESTION_BANK].sort(() => 0.5 - Math.random()).slice(0, 30);
+        fetchedQuestions = shuffled;
+        console.log("Banco de preguntas local cargado con éxito en el cliente:", fetchedQuestions.length);
+      }
+
+      if (fetchedQuestions.length > 0) {
+        setQuestions(fetchedQuestions);
         setStep("exam");
       } else {
-        throw new Error("El servidor devolvió un banco de preguntas vacío.");
+        throw new Error("No hay preguntas disponibles para iniciar la evaluación.");
       }
     } catch (err) {
       console.error("Error al iniciar el examen:", err);

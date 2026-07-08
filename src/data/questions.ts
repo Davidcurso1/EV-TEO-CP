@@ -7,489 +7,529 @@ export interface Question {
   id: number;
   question: string;
   options: string[];
-  correctAnswer: number; // 0-indexed (0 to 3)
+  correctAnswer: number; // 0-indexed (0 to 4)
   category: string;
 }
 
 export const QUESTION_BANK: Question[] = [
   {
     id: 1,
-    question: "¿Cuál es el límite de velocidad máximo permitido en zonas escolares y residenciales?",
+    question: "La vigencia de una licencia inicial de conducción para vehículos particulares y personas menores de 60 años es:",
     options: [
-      "50 km/h",
-      "40 km/h",
-      "30 km/h",
-      "20 km/h"
+      "Tres (3) años.",
+      "Cinco (5) años.",
+      "Diez (10) años contados a partir de la fecha de su expedición.",
+      "Un (1) año.",
+      "Indefinida mientras no se cometan infracciones graves de tránsito."
     ],
     correctAnswer: 2,
-    category: "Límites de velocidad"
+    category: "Leyes y Normatividad"
   },
   {
     id: 2,
-    question: "¿Qué indica una doble línea continua de color amarillo en el centro de la calzada?",
+    question: "La vigencia de la licencia de conducción para vehículos de servicio público para personas menores de 60 años es de:",
     options: [
-      "Permisión de adelantar en ambos sentidos de circulación",
-      "Prohibición estricta de adelantar en ambos sentidos de circulación",
-      "Zona destinada exclusivamente al estacionamiento temporal",
-      "Límite de velocidad reducido obligatorio"
+      "Diez (10) años.",
+      "Cinco (5) años.",
+      "Tres (3) años contados a partir de la fecha de su expedición.",
+      "Dos (2) años.",
+      "Se debe renovar anualmente tras realizar un examen teórico-práctico."
     ],
-    correctAnswer: 1,
-    category: "Señalización vial"
+    correctAnswer: 2,
+    category: "Leyes y Normatividad"
   },
   {
     id: 3,
-    question: "¿Qué distancia mínima de seguridad debe mantener con el vehículo precedente al transitar a 60 km/h en condiciones normales?",
+    question: "La licencia de conducción para el manejo de automóviles livianos para el servicio particular y público corresponde en su orden respectivo a las categorías:",
     options: [
-      "10 metros o la longitud de un vehículo",
-      "30 metros (aproximadamente la distancia recorrida en 2 segundos)",
-      "5 metros para reaccionar rápido",
-      "50 metros de forma obligatoria en toda circunstancia"
+      "A1 y A2.",
+      "B1 y C1.",
+      "B2 y C2.",
+      "C1 y C2.",
+      "B3 y C3."
     ],
     correctAnswer: 1,
-    category: "Distancia de seguridad"
+    category: "Categorías de Licencia"
   },
   {
     id: 4,
-    question: "Ante una luz roja intermitente en un semáforo, el conductor debe:",
+    question: "¿Cuáles de las siguientes razones ES causal para suspender temporalmente la licencia de conducción?",
     options: [
-      "Avanzar con precaución sin detenerse por completo",
-      "Detenerse por completo, ceder el paso a peatones y vehículos, y continuar si la vía está libre",
-      "Esperar a que cambie a color verde permanente",
-      "Girar obligatoriamente hacia el carril de la derecha"
+      "Por prestar el servicio público de transporte con vehículos particulares, salvo cuando el orden público lo justifique.",
+      "Por no portar el chaleco reflectivo después de las 6:00 p.m. al conducir un automóvil.",
+      "Por circular con el vehículo sucio o con fallas estéticas menores en la pintura.",
+      "Por cambiar de color el vehículo sin informarlo previamente a la empresa aseguradora.",
+      "Por parquear en zonas permitidas pero con el motor encendido por más de cinco minutos."
     ],
-    correctAnswer: 1,
-    category: "Normas de comportamiento"
+    correctAnswer: 0,
+    category: "Sanciones y Suspensiones"
   },
   {
     id: 5,
-    question: "¿Qué tipo de luces debe encender al transitar por túneles o bajo condiciones meteorológicas de lluvia severa?",
+    question: "¿Cuál de las siguientes causales NO constituye una causal para cancelar definitivamente la licencia de conducción?",
     options: [
-      "Luces altas o de carretera exclusivamente",
-      "Luces medias o bajas y exploradoras si es necesario",
-      "Luces intermitentes de emergencia únicamente",
-      "Ninguna, si el túnel cuenta con iluminación artificial óptima"
+      "Por decisión judicial o sentencia de un juez de la República.",
+      "Por muerte del titular de la licencia de conducción.",
+      "Por reincidir en la conducción en estado de embriaguez o bajo el efecto de drogas alucinógenas.",
+      "Por conducir con una licencia vencida (sin reincidencia ni estado de embriaguez).",
+      "Por imposibilidad física o mental permanente para conducir, soportada en un certificado médico."
     ],
-    correctAnswer: 1,
-    category: "Seguridad activa"
+    correctAnswer: 3,
+    category: "Sanciones y Suspensiones"
   },
   {
     id: 6,
-    question: "Las señales de tránsito preventivas tienen como función principal:",
+    question: "¿Si usted en su kit de carreteras lleva un sólo destornillador esto constituye una infracción de tránsito?",
     options: [
-      "Indicar prohibiciones, restricciones y sanciones aplicables",
-      "Advertir al usuario de la existencia de un peligro o condición especial en la vía",
-      "Guiar e informar sobre direcciones, destinos y puntos turísticos",
-      "Establecer prioridades de paso de manera exclusiva"
+      "No, siempre y cuando el destornillador sea de pala y estría al mismo tiempo (intercambiable).",
+      "Sí, porque el código exige explícitamente en el equipo de prevención dos destornilladores (uno de pala y uno de estría).",
+      "No, la norma del kit de carreteras exige herramientas pero no especifica la cantidad exacta de destornilladores.",
+      "Sí, porque no se permite llevar ninguna herramienta suelta dentro del baúl del automóvil.",
+      "No, las herramientas manuales ya no son obligatorias según las últimas reformas de seguridad vial en Colombia."
     ],
     correctAnswer: 1,
-    category: "Señalización vial"
+    category: "Kit de Carreteras"
   },
   {
     id: 7,
-    question: "¿Cuál es el límite de alcohol en sangre permitido para conductores de servicio público, escolar o vehículos de carga?",
+    question: "La infracción de tránsito por conducir un vehículo sin tener el Seguro Obligatorio de Accidentes de Tránsito (SOAT) vigente tendrá una sanción de:",
     options: [
-      "0.5 gramos por litro de sangre",
-      "0.2 gramos por litro de sangre",
-      "0.0 gramos por litro de sangre (Tolerancia Cero)",
-      "0.8 gramos por litro de sangre"
+      "Multa equivalente a 15 salarios mínimos legales diarios vigentes (SMLDV).",
+      "Multa equivalente a 30 salarios mínimos legales diarios vigentes (SMLDV) e inmovilización del vehículo.",
+      "Multa equivalente a 5 salarios mínimos legales mensuales vigentes.",
+      "Amonestación verbal y asistencia obligatoria a un curso de seguridad vial de dos horas.",
+      "Suspensión inmediata de la licencia de conducción por un período cerrado de 6 meses."
     ],
-    correctAnswer: 2,
-    category: "Leyes y sanciones"
+    correctAnswer: 1,
+    category: "Leyes y Sanciones"
   },
   {
     id: 8,
-    question: "En una intersección sin señales de prioridad o semáforos, ¿qué vehículo tiene el derecho de vía?",
+    question: "El conductor de un vehículo automotor que incurra en la infracción: “No realizar la revisión técnico-mecánica en el plazo legal establecido o cuando el vehículo no se encuentre en adecuadas condiciones” será sancionado con:",
     options: [
-      "El vehículo de mayor tamaño o peso",
-      "El vehículo que circula a mayor velocidad",
-      "El vehículo que se aproxima por el lado derecho del conductor",
-      "El vehículo de transporte público o escolar"
+      "Multa equivalente a 15 salarios mínimos legales diarios vigentes (SMLDV) e inmovilización del vehículo.",
+      "Multa de 5 salarios mínimos diarios y el traslado obligatorio del carro al taller de su preferencia.",
+      "Amonestación escrita en la plataforma RUNT y retiro temporal de las placas del automotor.",
+      "Multa equivalente a 30 salarios mínimos legales diarios vigentes (SMLDV) sin derecho a ningún descuento.",
+      "Suspensión total de los derechos de propiedad del vehículo automotor de forma preventiva."
     ],
-    correctAnswer: 2,
-    category: "Prioridades de paso"
+    correctAnswer: 0,
+    category: "Leyes y Sanciones"
   },
   {
     id: 9,
-    question: "¿Qué acción debe tomar de inmediato si su vehículo sufre de aquaplaning (pérdida de tracción sobre charcos de agua)?",
+    question: "El conductor de un vehículo automotor que incurra en la infracción: “Conducir un vehículo a velocidad superior a la máxima permitida” será sancionado con:",
     options: [
-      "Frenar a fondo de inmediato y girar el volante con fuerza",
-      "Sujetar firmemente el volante, no frenar bruscamente, soltar suavemente el acelerador y dejar que ruede",
-      "Aumentar la velocidad para superar rápidamente la acumulación de agua",
-      "Colocar el vehículo en neutro (punto muerto) y apagar el motor"
+      "Multa equivalente a 10 salarios mínimos legales diarios vigentes (SMLDV).",
+      "Multa equivalente a 15 salarios mínimos legales diarios vigentes (SMLDV).",
+      "Multa equivalente a 30 salarios mínimos legales diarios vigentes (SMLDV).",
+      "Inmovilización preventiva del vehículo en los patios asignados por la secretaría por 48 horas.",
+      "Retiro inmediato de la licencia de conducción y cancelación definitiva de la misma."
     ],
     correctAnswer: 1,
-    category: "Conducción defensiva"
+    category: "Límites de Velocidad"
   },
   {
     id: 10,
-    question: "¿Cuál es el uso correcto del cinturón de seguridad de tres puntos?",
+    question: "¿Cuántos grados de alcohol existen en el Código Nacional de Tránsito de Colombia para aplicar sanciones consecutivas?",
     options: [
-      "La banda diagonal sobre el cuello y la horizontal sobre el estómago",
-      "La banda diagonal sobre el hombro y pecho, y la banda horizontal abrazando los huesos de la pelvis",
-      "Usarlo flojo para permitir el movimiento rápido del conductor",
-      "Es obligatorio únicamente para mujeres embarazadas y adultos mayores"
+      "Un solo grado general (positivo o negativo).",
+      "Dos grados de alcoholemia: Grado 1 y Grado 2.",
+      "Tres grados de alcoholemia: Grado 1, Grado 2 y Grado 3.",
+      "Cuatro grados oficiales: Grado 0 (0.20-0.39 mg/l), Grado 1, Grado 2 y Grado 3.",
+      "Cinco grados que varían según los años de experiencia activa del conductor evaluado."
     ],
-    correctAnswer: 1,
-    category: "Seguridad pasiva"
+    correctAnswer: 3,
+    category: "Alcoholemia"
   },
   {
     id: 11,
-    question: "Las señales de tránsito informativas se caracterizan generalmente por:",
+    question: "¿Cuál es la velocidad máxima que es permitida por ley al transitar en una zona residencial, escolar o de concentración de personas?",
     options: [
-      "Tener forma circular con borde rojo y fondo blanco",
-      "Tener forma de rombo, color amarillo con símbolos negros",
-      "Tener forma rectangular, colores azul, verde o marrón con texto blanco",
-      "Ser octogonales con la palabra 'PARE' inscrita"
+      "10 km/h.",
+      "20 km/h.",
+      "30 km/h.",
+      "40 km/h.",
+      "50 km/h."
     ],
     correctAnswer: 2,
-    category: "Señalización vial"
+    category: "Límites de Velocidad"
   },
   {
     id: 12,
-    question: "Al escuchar la sirena de una ambulancia, bomberos o policía detrás de usted, ¿qué debe hacer?",
+    question: "¿Cuál es la principal causal de siniestros viales reportada históricamente en las vías del territorio colombiano?",
     options: [
-      "Aumentar la velocidad para no retrasar el vehículo de emergencia",
-      "Frenar de golpe en el carril actual para permitir que le adelanten por el lado",
-      "Ceder el paso desplazándose de manera segura hacia el borde derecho de la calzada",
-      "Seguir de cerca al vehículo de emergencia para evadir el tráfico denso"
+      "Las fallas mecánicas imprevistas del vehículo (tales como ruptura de frenos y llantas estalladas).",
+      "El mal estado de la infraestructura vial y la falta recurrente de señalización vertical reflectiva.",
+      "Las condiciones climáticas adversas como la neblina densa y las lluvias torrenciales de granizo.",
+      "El exceso de velocidad en las vías combinado con la imprudencia y errores del conductor.",
+      "La falta de iluminación artificial en las carreteras nacionales durante las horas de la noche."
     ],
-    correctAnswer: 2,
-    category: "Normas de comportamiento"
+    correctAnswer: 3,
+    category: "Seguridad Vial"
   },
   {
     id: 13,
-    question: "¿Qué significa una línea discontinua de color blanco pintada en el asfalto?",
+    question: "¿Qué significan las siglas del protocolo \"PAS\" utilizado para la atención primaria y obligatoria de siniestros viales?",
     options: [
-      "Prohibición de cambiar de carril y adelantar en el mismo sentido",
-      "Separación de carriles del mismo sentido, permitiendo el cambio de carril con precaución",
-      "Límite de paso peatonal exclusivo en autopistas rápidas",
-      "Zona de estacionamiento prohibido permanente"
+      "Prevenir, Auxiliar, Salvaguardar.",
+      "Proteger, Avisar, Socorrer.",
+      "Promover, Atender, Solucionar.",
+      "Priorizar, Asistir, Sanar.",
+      "Parar, Analizar, Sancionar."
     ],
     correctAnswer: 1,
-    category: "Señalización vial"
+    category: "Primeros Auxilios"
   },
   {
     id: 14,
-    question: "El denominado 'punto ciego' en un vehículo se define como:",
+    question: "Si usted ha ingerido alcohol, ¿cuáles son los efectos más probables y peligrosos al momento de conducir un carro?",
     options: [
-      "La zona que no puede ser vista a través del parabrisas delantero debido al sol directo",
-      "El área de la calzada que queda oculta a la visión del conductor por los pilares del auto o fuera del rango de los espejos",
-      "La pérdida temporal de la visión del conductor provocada por las luces altas de otro vehículo",
-      "La distancia de frenado que ocurre en condiciones nocturnas"
+      "Aumento del campo visual periférico y disminución del tiempo de reacción física ante un peligro.",
+      "Falsa sensación de seguridad, alteración de la percepción de distancias y aumento del tiempo de reacción.",
+      "Agudización de los sentidos táctiles y optimización de la coordinación motriz fina en curvas sinuosas.",
+      "Reducción total del sueño y mantenimiento de un estado de alerta máxima prolongado por varias horas.",
+      "Mejora sustancial en la capacidad para tomar decisiones rápidas bajo situaciones extremas de frenado."
     ],
     correctAnswer: 1,
-    category: "Conducción defensiva"
+    category: "Factores de Riesgo"
   },
   {
     id: 15,
-    question: "¿Cuál es la distancia mínima lateral que debe mantener respecto a un ciclista al intentar adelantarlo en carretera?",
+    question: "¿Cuándo es más probable que usted pierda la concentración y el foco atencional mientras se encuentra conduciendo?",
     options: [
-      "0.5 metros",
-      "1.0 metros",
-      "1.5 metros",
-      "2.5 metros"
+      "Cuando mira de manera constante los espejos retrovisores internos y externos según las técnicas de escaneo.",
+      "Cuando utiliza un teléfono celular (incluso con manos libres), manipula la pantalla táctil o viaja con fatiga.",
+      "Cuando mantiene ambas manos firmes sobre el volante en la posición correcta de las 10 y 10 del reloj.",
+      "Cuando respeta rigurosamente todas las distancias de seguridad con el vehículo delantero en carretera.",
+      "Cuando realiza el chequeo preoperacional rutinario de fluidos antes de encender el motor del carro."
     ],
-    correctAnswer: 2,
-    category: "Prioridades de paso"
+    correctAnswer: 1,
+    category: "Factores de Riesgo"
   },
   {
     id: 16,
-    question: "¿Cuál de las siguientes opciones corresponde a un sistema de seguridad pasiva del vehículo?",
+    question: "¿El uso del cinturón de seguridad en la parte trasera de un automóvil es obligatorio en Colombia?",
     options: [
-      "Los frenos con sistema antibloqueo (ABS)",
-      "El control electrónico de estabilidad (ESP)",
-      "El sistema de bolsas de aire (Airbags) y el cinturón de seguridad",
-      "Los espejos retrovisores antideslumbrantes automáticos"
+      "No, la ley colombiana determina que solo es obligatorio para el conductor y el copiloto en la parte delantera.",
+      "Sí, es completamente obligatorio para todos los ocupantes en los modelos de vehículos a partir del año 2004.",
+      "Es un elemento de uso opcional y queda bajo el criterio o la responsabilidad exclusiva del propietario.",
+      "Solo es exigido si el vehículo va a transitar por carreteras nacionales o autopistas de alta velocidad.",
+      "Solo aplica de manera obligatoria cuando viajan menores de edad o mujeres gestantes en los asientos de atrás."
     ],
-    correctAnswer: 2,
-    category: "Seguridad pasiva"
+    correctAnswer: 1,
+    category: "Seguridad Pasiva"
   },
   {
     id: 17,
-    question: "De acuerdo con las regulaciones generales de tránsito urbano, ¿cuál es el límite de velocidad estándar permitido en avenidas urbanas?",
+    question: "¿Qué es lo primero que usted debería hacer obligatoriamente antes de iniciar una maniobra de adelantamiento en calzada bidireccional?",
     options: [
-      "80 km/h",
-      "50 km/h (o según señalización local)",
-      "30 km/h",
-      "100 km/h"
+      "Aumentar la velocidad a fondo y tocar la bocina ruidosamente para alertar a los demás usuarios de la vía.",
+      "Asegurarse de que puede realizar la maniobra sin peligro, verificar los espejos y constatar que no viene tránsito en contra.",
+      "Activar las luces de parqueo o estacionarias de manera continua durante todo el desplazamiento.",
+      "Cambiar inmediatamente a una marcha o cambio de velocidad inferior (como primera velocidad) para revolucionar el motor.",
+      "Acercarse lo máximo posible al parachoques trasero del vehículo que pretende adelantar para acortar el tiempo."
     ],
     correctAnswer: 1,
-    category: "Límites de velocidad"
+    category: "Maniobras de Tránsito"
   },
   {
     id: 18,
-    question: "La luz amarilla constante del semáforo nos advierte de:",
+    question: "¿Cuál es considerado el actor vial más vulnerable en el entorno de la movilidad y el espacio público en Colombia?",
     options: [
-      "Aumentar rápidamente la velocidad para cruzar antes del cambio",
-      "Que el semáforo va a cambiar a rojo; se debe detener el vehículo a menos que la maniobra represente peligro",
-      "Que podemos avanzar libremente porque los peatones tienen luz roja",
-      "Un fallo de energía eléctrica en el sector vial"
+      "El conductor de vehículo particular de carga liviana o camioneta tipo estacas.",
+      "El peatón, seguido muy de cerca por los ciclistas y los motociclistas.",
+      "El conductor de transporte público de pasajeros en zonas rurales o veredales.",
+      "El pasajero de rutas escolares debidamente identificadas con franjas amarillas y negras.",
+      "El operador de maquinaria agrícola o de construcción pesada en vías intermunicipales."
     ],
     correctAnswer: 1,
-    category: "Señalización vial"
+    category: "Seguridad Vial"
   },
   {
     id: 19,
-    question: "¿Cuáles son los documentos básicos obligatorios que debe portar un conductor al transitar?",
+    question: "¿Cuál es el límite de velocidad máximo general establecido por la Ley 2251 de 2022 para las vías urbanas en Colombia?",
     options: [
-      "Cédula de ciudadanía únicamente",
-      "Licencia de conducción, licencia de tránsito (tarjeta de propiedad), SOAT vigente y certificado de revisión tecnicomecánica",
-      "El contrato original de compraventa del vehículo firmado",
-      "El carnet de afiliación a la salud y seguro exequial"
+      "30 km/h.",
+      "40 km/h.",
+      "50 km/h.",
+      "60 km/h.",
+      "80 km/h."
     ],
-    correctAnswer: 1,
-    category: "Leyes y sanciones"
+    correctAnswer: 2,
+    category: "Límites de Velocidad"
   },
   {
     id: 20,
-    question: "Si una llanta de su vehículo se pincha o estalla bruscamente a alta velocidad, usted debe:",
+    question: "¿Qué conducta o situación en la vía podrá ocasionar con mayor probabilidad una colisión por la parte trasera de su vehículo?",
     options: [
-      "Frenar de golpe a fondo y girar el volante rápidamente al lado contrario",
-      "Sujetar firmemente el volante con ambas manos, soltar el acelerador paulatinamente y dirigir el vehículo al arcén sin frenar bruscamente",
-      "Apagar la llave de encendido del motor de inmediato para detenerse",
-      "Pisar el embrague y tirar fuertemente del freno de mano para clavar las llantas"
+      "Mantener una velocidad constante e igual al límite máximo permitido por las señales de la vía.",
+      "Señalizar adecuadamente con las luces direccionales antes de realizar un giro programado en una bocacalle.",
+      "Una frenada fuerte, intempestiva y sorpresiva de su vehículo sin justificación técnica ni de emergencia aparente.",
+      "Conducir por el carril derecho manteniendo la distancia de seguridad reglamentaria con base en los segundos de separación.",
+      "Encender las luces medias obligatorias cuando se transita habitualmente por las carreteras nacionales diurnas."
     ],
-    correctAnswer: 1,
-    category: "Conducción defensiva"
+    correctAnswer: 2,
+    category: "Factores de Riesgo"
   },
   {
     id: 21,
-    question: "¿Qué significan las señales reglamentarias verticales (borde rojo, fondo blanco, símbolos negros)?",
+    question: "¿Cuál de las siguientes señales de tránsito verticales indica al conductor la prohibición del paso de ciclistas por el tramo vial?",
     options: [
-      "Advierten sobre peligros futuros en la carretera",
-      "Indican límites, prohibiciones o restricciones cuyo incumplimiento constituye una infracción",
-      "Informa sobre la distancia restante a una población o parador",
-      "Señales temporales de obras en la vía"
+      "La señal preventiva identificada con el código SP59.",
+      "La señal reglamentaria identificada con el código SR22.",
+      "La señal informativa identificada con el código SI04.",
+      "La señal reglamentaria identificada con el código SR01.",
+      "La señal transitoria identificada con el código ST12."
     ],
     correctAnswer: 1,
-    category: "Señalización vial"
+    category: "Señalización Vial"
   },
   {
     id: 22,
-    question: "¿Qué efecto tiene el consumo de alcohol, por mínimo que sea, en las capacidades del conductor?",
+    question: "¿Cuál de los siguientes enunciados define mejor y con exactitud a una señal de tránsito de tipo horizontal?",
     options: [
-      "Mejora los reflejos y permite reaccionar con mayor rapidez",
-      "Disminuye el tiempo de reacción frente a un obstáculo vistiéndolo de agilidad",
-      "Aumenta el tiempo de reacción, altera la percepción de distancias y reduce el campo visual",
-      "No altera en absoluto la conducción si se hace con precaución extrema"
+      "Son estructuras metálicas ubicadas a los lados de la vía con un poste de soporte vertical empotrado en el suelo.",
+      "Son dispositivos luminosos con luces de colores cambiantes instalados de forma secuencial en las intersecciones.",
+      "Son líneas, símbolos, figuras, palabras o números pintados o colocados sobre el pavimento para regular el flujo.",
+      "Son indicaciones verbales o manuales dadas de forma directa por los agentes de tránsito uniformados en un control.",
+      "Son vallas informativas de gran tamaño autorizadas por el Ministerio de Transporte a lo largo de las bermas."
     ],
     correctAnswer: 2,
-    category: "Leyes y sanciones"
+    category: "Señalización Vial"
   },
   {
     id: 23,
-    question: "¿Cuál es la forma correcta de abordar una rotonda o glorieta?",
+    question: "¿De qué color de fondo característico son las señales de tránsito informativas de carácter turístico y de servicios?",
     options: [
-      "Tienen prioridad los vehículos que pretenden ingresar a ella",
-      "Tiene prioridad absoluta el vehículo de mayor tonelaje dentro o fuera de ella",
-      "Tienen prioridad los vehículos que ya están circulando dentro de la rotonda",
-      "Se debe avanzar en sentido contrario si nuestro destino queda más cerca"
+      "Fondo azul rey brillante.",
+      "Fondo amarillo reflectivo de alta visibilidad.",
+      "Fondo café o marrón.",
+      "Fondo verde oliva de tipo forestal.",
+      "Fondo naranja fluorescente utilizado para obras civiles."
     ],
     correctAnswer: 2,
-    category: "Prioridades de paso"
+    category: "Señalización Vial"
   },
   {
     id: 24,
-    question: "Las luces direccionales del vehículo deben utilizarse obligatoriamente:",
+    question: "La señal reglamentaria de \"Ceda el Paso\" físicamente tiene la forma geométrica de:",
     options: [
-      "Solo durante las horas de la noche o en climas oscuros",
-      "Con una anticipación mínima antes de realizar giros, cambios de carril o incorporaciones",
-      "Solo cuando hay presencia visible de agentes de tránsito",
-      "Únicamente al circular por autopistas nacionales veloces"
+      "Un octágono regular con fondo de color rojo vivo y letras blancas.",
+      "Un triángulo equilátero invertido con bordes rojos y fondo blanco.",
+      "Un círculo perfecto con una línea diagonal roja que lo atraviesa de izquierda a derecha.",
+      "Un rombo perfecto con fondo amarillo y un símbolo interno de color negro.",
+      "Un rectángulo vertical con fondo azul oscuro e iconos descriptivos blancos."
     ],
     correctAnswer: 1,
-    category: "Seguridad activa"
+    category: "Señalización Vial"
   },
   {
     id: 25,
-    question: "En una calzada mojada por la lluvia, la distancia de frenado de un vehículo:",
+    question: "De acuerdo con su función, diseño y naturaleza, las señales de tránsito verticales se clasifican oficialmente en:",
     options: [
-      "Se mantiene exactamente igual que sobre asfalto seco",
-      "Se reduce considerablemente gracias a la limpieza del agua",
-      "Puede aumentar hasta el doble o más en comparación con una superficie seca",
-      "Depende únicamente del cilindraje del motor"
+      "Horizontales, verticales, aéreas y subterráneas de metro.",
+      "Reglamentarias, preventivas, informativas y transitorias.",
+      "Municipales, departamentales, nacionales y de fronteras internacionales.",
+      "Obligatorias, prohibitivas, sugeridas y de libre circulación autonómica.",
+      "Urbanas, rurales, escolares y para autopistas nacionales de doble calzada."
     ],
-    correctAnswer: 2,
-    category: "Distancia de seguridad"
+    correctAnswer: 1,
+    category: "Señalización Vial"
   },
   {
     id: 26,
-    question: "¿A qué distancia previa se deben encender las luces direccionales para girar en una zona urbana?",
+    question: "¿Cuál es la función técnico-mecánica principal del aceite lubricante dentro del motor de un automóvil?",
     options: [
-      "Mínimo 5 metros antes del giro",
-      "Mínimo 30 metros antes de realizar la maniobra de giro",
-      "Exactamente al comenzar a girar el volante",
-      "No se requiere una distancia fija, es a discreción del conductor"
+      "Generar la chispa eléctrica necesaria para producir la combustión interna del carburante.",
+      "Lubricar las piezas metálicas internas en movimiento, reduciendo drásticamente la fricción y el desgaste prematuro.",
+      "Enfriar directamente las bandas de rodadura de los neumáticos del vehículo mediante tuberías selladas.",
+      "Limpiar el parabrisas delantero absorbiendo de forma química las impurezas del medio ambiente.",
+      "Mezclarse directamente con la gasolina en el tanque para aumentar los octanos de la mezcla."
     ],
     correctAnswer: 1,
-    category: "Normas de comportamiento"
+    category: "Mecánica Básica"
   },
   {
     id: 27,
-    question: "¿Qué significa el término 'fatiga' al conducir un vehículo?",
+    question: "¿Cuál es la función del radiador en el sistema de refrigeración de un vehículo automotor?",
     options: [
-      "El calentamiento excesivo de los componentes internos del motor",
-      "El desgaste prematuro de las bandas de rodadura de los neumáticos",
-      "Un estado psicofísico de cansancio que disminuye la atención y aumenta el tiempo de respuesta",
-      "El desajuste en el sistema de amortiguación hidráulica"
+      "Almacenar la energía eléctrica residual producida por el alternador del carro en bajas revoluciones.",
+      "Filtrar las impurezas y partículas de polvo del aire exterior antes de que ingresen a la cabina de pasajeros.",
+      "Evitar el recalentamiento del motor disipando el calor acumulado en el líquido refrigerante al pasar por sus celdas.",
+      "Suavizar el impacto provocado por las irregularidades, baches y resaltos del terreno pavimentado o destapado.",
+      "Distribuir de forma equitativa la presión hidráulica de los frenos hacia cada una de las mordazas de las cuatro ruedas."
     ],
     correctAnswer: 2,
-    category: "Leyes y sanciones"
+    category: "Mecánica Básica"
   },
   {
     id: 28,
-    question: "La velocidad de diseño o límite máximo en curvas peligrosas:",
+    question: "¿Qué efecto negativo e inmediato ocurre en el vehículo si el filtro de aire del motor está demasiado sucio o colmatado?",
     options: [
-      "Se aplica solo para vehículos de carga pesada",
-      "Debe ser respetada por todos los vehículos para evitar pérdida de control por fuerza centrífuga",
-      "Es una sugerencia que se puede ignorar si el asfalto está totalmente seco",
-      "Debe duplicarse si se cuenta con neumáticos deportivos de alto agarre"
+      "El motor incrementa notablemente su potencia y velocidad máxima final debido al exceso de temperatura.",
+      "El motor pierde potencia debido a la falta de oxígeno en la mezcla y aumenta significativamente el consumo de combustible.",
+      "El sistema de frenos antibloqueo (ABS) se desactiva de forma automática por protección electrónica.",
+      "Las luces delanteras e indicadores del tablero pierden intensidad lumínica de forma progresiva.",
+      "El líquido de la batería se evapora instantáneamente provocando un cortocircuito general en la ECU."
     ],
     correctAnswer: 1,
-    category: "Límites de velocidad"
+    category: "Mecánica Básica"
   },
   {
     id: 29,
-    question: "¿Qué debe hacer si el semáforo cambia a verde pero la intersección aún está bloqueada por tráfico?",
+    question: "¿Qué fallo o alerta del sistema indica de forma prioritaria una luz roja encendida con la silueta de una batería en el tablero de instrumentos (testigo)?",
     options: [
-      "Avanzar y presionar insistentemente la bocina para abrir paso",
-      "Esperar detrás de la línea de parada hasta que la intersección se despeje por completo",
-      "Esquivar los carros cruzando por el andén o paso peatonal",
-      "Avanzar y ubicarse en medio del cruce bloqueando el sentido contrario"
+      "Que la batería está completamente cargada y funcionando en su nivel óptimo de voltaje nominal.",
+      "Que el alternador o el sistema de generación de carga eléctrica presentan un fallo y la batería no se está recargando.",
+      "Que el conductor olvidó desactivar las luces direccionales izquierdas al salir de una intersección.",
+      "Que el nivel del líquido del depósito lavaparabrisas se encuentra por debajo del mínimo recomendado.",
+      "Que la presión de inflado en los neumáticos delanteros es extremadamente deficiente o baja."
     ],
     correctAnswer: 1,
-    category: "Normas de comportamiento"
+    category: "Mecánica Básica"
   },
   {
     id: 30,
-    question: "Cuando un peatón inicia el cruce de una vía en un paso peatonal (cebra), el conductor debe:",
+    question: "¿Cuál es la finalidad principal del diligenciamiento diario del formato de revisión preoperacional de un vehículo?",
     options: [
-      "Hacer señales de luces para avisarle que no se detendrá",
-      "Detener el vehículo por completo antes de la línea de parada y cederle el paso",
-      "Esquivarlo acelerando para pasar antes de que cruce su carril",
-      "Pitar con fuerza para alertarle de que despeje el paso"
+      "Evitar sanciones comerciales o la pérdida de la garantía extendida por parte de los concesionarios oficiales de la marca.",
+      "Identificar fallas antes de marchar para prevenir siniestros viales por causas técnico-mecánicas previsibles.",
+      "Modificar de manera automática los datos del propietario del carro ante el Registro Único Nacional de Tránsito (RUNT).",
+      "Validar el incremento anual del costo de la póliza contractual y extracontractual contra todo riesgo.",
+      "Servir como documento público válido para realizar el traspaso directo del dominio del automotor en caso de compraventa."
     ],
     correctAnswer: 1,
-    category: "Prioridades de paso"
+    category: "Seguridad Vial"
   },
   {
     id: 31,
-    question: "¿Qué indica la presencia de una línea continua sencilla de color blanco al lado de la calzada?",
+    question: "Al aproximarse a una glorieta o rotonda de un solo carril, ¿quién tiene la prelación o derecho de vía según el Código de Tránsito colombiano?",
     options: [
-      "El carril exclusivo para el transporte masivo de pasajeros",
-      "El límite exterior de la calzada transitada (línea de borde de pavimento)",
-      "Un punto de detención total para control de policía vial",
-      "La zona prohibida para el tránsito nocturno de bicicletas"
+      "El conductor que va a ingresar a la glorieta por cualquiera de los costados de acceso.",
+      "El vehículo de mayor tamaño o peso bruto vehicular de acuerdo con la clasificación del RUNT.",
+      "El conductor que ya se encuentra circulando de forma interna dentro de la glorieta.",
+      "El vehículo que circule a una velocidad superior o que haga uso de la bocina con antelación.",
+      "El conductor que tenga la intención de tomar la primera salida inmediata de la estructura vial."
     ],
-    correctAnswer: 1,
-    category: "Señalización vial"
+    correctAnswer: 2,
+    category: "Prelación de Paso"
   },
   {
     id: 32,
-    question: "¿A partir de qué nivel de alcohol se sanciona con suspensión de licencia y multas pecuniarias según la ley?",
+    question: "¿A qué distancia mínima en metros se debe estacionar (parquear) un vehículo de una esquina o intersección vial?",
     options: [
-      "Desde el primer grado detectado por prueba de alcoholemia (mayor a 20 mg/100 ml de sangre)",
-      "Solo si el conductor causa un siniestro vial de gravedad extrema",
-      "Únicamente si sobrepasa los 150 mg de alcohol en sangre",
-      "Cuando se demuestra que el conductor no puede mantenerse de pie"
+      "A un mínimo estricto de 2 metros de la línea de calzada peatonal.",
+      "A un mínimo de 5 metros de la esquina de la cuadra o intersección.",
+      "A cualquier distancia siempre y cuando no se obstaculice visualmente un hidrante de incendios.",
+      "A 10 metros únicamente en avenidas comerciales de alto flujo de transporte masivo.",
+      "El Código Nacional de Tránsito de Colombia no establece ninguna distancia métrica restrictiva para las esquinas urbanas."
     ],
-    correctAnswer: 0,
-    category: "Leyes y sanciones"
+    correctAnswer: 1,
+    category: "Normas de Comportamiento"
   },
   {
     id: 33,
-    question: "La profundidad mínima legal permitida de la banda de rodamiento de una llanta para automóvil convencional es de:",
+    question: "¿Qué tipo de luces deben encenderse obligatoriamente al transitar por túneles del territorio nacional en cualquier hora del día?",
     options: [
-      "0.5 milímetros",
-      "1.6 milímetros",
-      "3.0 milímetros",
-      "5.0 milímetros"
+      "Las luces de parqueo, de emergencia o estacionarias exclusivamente.",
+      "Las luces altas o de carretera para lograr la máxima visibilidad profunda.",
+      "Las luces bajas o de posición medias del vehículo.",
+      "Las luces exploradoras de alta densidad antiniebla traseras únicamente.",
+      "No se requiere encender ningún tipo de luz si el túnel ya cuenta con iluminación interna artificial LED."
     ],
-    correctAnswer: 1,
-    category: "Seguridad activa"
+    correctAnswer: 2,
+    category: "Normas de Comportamiento"
   },
   {
     id: 34,
-    question: "¿Qué es el 'efecto túnel' relacionado con el exceso de velocidad?",
+    question: "Cuando dos vehículos se encuentran de frente en una pendiente estrecha (vía empinada de un solo carril), ¿quién tiene la prelación de paso?",
     options: [
-      "La sensación de frescura que se experimenta al ingresar a un paso subterráneo",
-      "La reducción severa de la visión lateral del conductor a medida que aumenta la velocidad",
-      "La necesidad de encender las luces automáticas en túneles cortos",
-      "La distorsión del sonido del motor debido a la presión del aire exterior"
+      "El vehículo que va descendiendo (bajando) la pendiente, por el riesgo de pérdida de control de frenos.",
+      "El vehículo que va ascendiendo (subiendo) la pendiente, por la dificultad física de reiniciar la marcha en subida.",
+      "El vehículo que tenga menor peso bruto vehicular según la tarjeta de registro correspondiente.",
+      "El conductor que apague el motor primero para ceder el espacio físico de maniobra en la berma.",
+      "El vehículo particular sobre cualquier tipo de transporte público, escolar o de carga pesada."
     ],
     correctAnswer: 1,
-    category: "Conducción defensiva"
+    category: "Prelación de Paso"
   },
   {
     id: 35,
-    question: "¿Cuál es la forma segura de estacionar un vehículo en una pendiente descendente (bajada)?",
+    question: "La maniobra de reversa en las vías públicas colombianas está prohibida de manera general, EXCEPTO en cuál de los siguientes casos:",
     options: [
-      "Dejar el vehículo en neutro y aplicar el freno de mano levemente",
-      "Engranar la reversa y girar las llantas delanteras hacia el andén o acera de la vía",
-      "Engranar la primera velocidad y dejar las llantas alineadas hacia el centro",
-      "Apoyar el vehículo únicamente en el embrague sin usar freno"
+      "Para adelantar de manera ágil a un vehículo que se encuentra varado obstaculizando un carril congestionado.",
+      "En caso de presentarse una congestión vehicular extrema o \"trancón\" en una autopista principal de doble calzada.",
+      "Para estacionar el vehículo (parquear) o en casos de estricta emergencia donde sea imposible avanzar hacia adelante.",
+      "Para regresar rápidamente a una esquina cuando el conductor se ha pasado de largo de la dirección residencial buscada.",
+      "Cuando se transita en horas de la madrugada por una vía de tipo residencial con muy bajo flujo de peatones."
     ],
-    correctAnswer: 1,
-    category: "Normas de comportamiento"
+    correctAnswer: 2,
+    category: "Maniobras de Tránsito"
   },
   {
     id: 36,
-    question: "¿Qué tipo de señal es una señal octagonal de color rojo con letras blancas que dice 'PARE'?",
+    question: "¿A qué base de datos y sistema centralizado se reportan todos los trámites, licencias, propiedad de automotores e historiales de los conductores en Colombia?",
     options: [
-      "Preventiva",
-      "Informativa",
-      "Reglamentaria",
-      "Transitoria"
+      "Al Ministerio de Tecnologías de la Información y las Comunicaciones (MinTIC).",
+      "Al Registro Único Nacional de Tránsito (RUNT).",
+      "A la Superintendencia de Puertos y Transporte de manera directa y preferencial.",
+      "Al Sistema Integrado de Información sobre Multas y Sanciones por Infracciones de Tránsito (SIMIT).",
+      "A la Fiscalía General de la Nación dentro del área de delitos civiles y contra el patrimonio económico."
     ],
-    correctAnswer: 2,
-    category: "Señalización vial"
+    correctAnswer: 1,
+    category: "Sistemas Nacionales"
   },
   {
     id: 37,
-    question: "¿Qué es la seguridad activa en un vehículo?",
+    question: "¿A través de qué sistema nacional un ciudadano puede consultar el estado de sus comparendos, multas pendientes y realizar acuerdos de pago por internet?",
     options: [
-      "Los sistemas que ayudan a mitigar las consecuencias de un impacto inevitable",
-      "La cobertura médica del seguro obligatorio de accidentes (SOAT)",
-      "Los sistemas y elementos diseñados para evitar activamente que ocurra un accidente",
-      "La alarma sonora antirrobo y el GPS rastreador"
+      "El Registro Único Nacional de Tránsito (RUNT).",
+      "El Sistema Integrado de Información sobre Multas y Sanciones por Infracciones de Tránsito (SIMIT).",
+      "El Centro de Diagnóstico Automotor (CDA) municipal.",
+      "La Agencia Nacional de Seguridad Vial (ANSV).",
+      "El Registro de Operadores de Transporte Terrestre (ROTT)."
     ],
-    correctAnswer: 2,
-    category: "Seguridad activa"
+    correctAnswer: 1,
+    category: "Sistemas Nacionales"
   },
   {
     id: 38,
-    question: "¿En qué lugares está estrictamente prohibido estacionar un vehículo?",
+    question: "De acuerdo con la Ley 769 de 2002, ¿cuál es la distancia lateral mínima de seguridad que debe mantener un conductor de carro al adelantar a un ciclista en la vía?",
     options: [
-      "En garajes privados autorizados únicamente",
-      "En curvas, puentes, túneles, pasos elevados, pasos de peatones o frente a garajes públicos",
-      "En bahías de estacionamiento debidamente señalizadas con azul",
-      "Al frente de nuestra propia casa residencial"
+      "0.5 metros de distancia lateral.",
+      "1.0 metro exacto de separación física midiendo desde el retrovisor.",
+      "1.5 metros de distancia lateral para garantizar la estabilidad aerodinámica del ciclista.",
+      "2.0 metros de separación total evaluando las corrientes de aire.",
+      "La distancia es libre siempre y cuando no se haga uso de la bocina a menos de diez metros de la bicicleta."
     ],
-    correctAnswer: 1,
-    category: "Normas de comportamiento"
+    correctAnswer: 2,
+    category: "Seguridad Vial"
   },
   {
     id: 39,
-    question: "La distancia de reacción se define como la distancia que recorre el vehículo:",
+    question: "¿Qué documento vigente acredita legalmente que un vehículo automotor particular cumple con las normas de seguridad mecánica y emisiones ambientales obligatorias?",
     options: [
-      "Desde que el conductor percibe un peligro hasta que pisa el pedal del freno",
-      "Desde que se presiona el freno hasta que el vehículo se detiene totalmente",
-      "Desde que se encienden las luces rojas traseras de advertencia",
-      "Al adelantar a un vehículo pesado en carretera de doble sentido"
+      "El certificado de matrícula inmobiliaria y de tradición del propietario del carro.",
+      "La póliza de seguro prepagada de responsabilidad civil extracontractual familiar.",
+      "El certificado de aprobación de la Revisión Técnico-Mecánica y de Emisiones Contaminantes (expedido por un CDA autorizado).",
+      "La tarjeta de operación nacional y el carné de afiliación a una empresa de transportes corporativos.",
+      "El recibo impreso original de pago del impuesto de rodamiento e impuesto vehicular anualizado."
     ],
-    correctAnswer: 0,
-    category: "Conducción defensiva"
+    correctAnswer: 2,
+    category: "Documentación Vial"
   },
   {
     id: 40,
-    question: "El mantenimiento preventivo periódico del vehículo ayuda principalmente a:",
+    question: "Si un documento o un agente de tránsito le impone una orden de comparendo en la vía de forma presencial, ¿cuántos días hábiles tiene para presentarse a apelar o pagar con el 50% de descuento realizando el curso obligatorio de seguridad vial?",
     options: [
-      "Aumentar el valor comercial especulativo de reventa del automóvil",
-      "Evitar fallas mecánicas imprevistas que puedan causar accidentes viales",
-      "Evitar el cobro anual de impuestos vehiculares municipales",
-      "Disminuir la potencia nominal de aceleración en pendientes empinadas"
+      "3 días hábiles siguientes a la imposición de la orden.",
+      "5 días hábiles siguientes a la imposición de la orden.",
+      "11 días hábiles en todos los casos procesados bajo esta modalidad vial.",
+      "15 días calendario incluyendo de manera indistinta sábados, domingos y días feriados nacionales.",
+      "30 días hábiles de plazo máximo improrrogable ante la inspección o secretaría de movilidad local."
     ],
     correctAnswer: 1,
-    category: "Seguridad activa"
+    category: "Sanciones y Procesos"
   }
 ];

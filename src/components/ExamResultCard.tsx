@@ -22,6 +22,7 @@ import {
   Download 
 } from "lucide-react";
 import { UserRegistration, AnswerDetail, ExamResult, SyncStatus } from "../types";
+import InscolsstLogo from "./InscolsstLogo";
 
 interface ExamResultCardProps {
   registration: UserRegistration;
@@ -313,6 +314,14 @@ export default function ExamResultCard({
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Co-Branded Official Seal of INSCOLSST & VialPro */}
+          <div className="border-t border-slate-100 pt-5 mt-6 pb-2 text-center flex flex-col items-center justify-center bg-slate-50/50 -mx-6 px-6 border-b rounded-b-3xl">
+            <InscolsstLogo size="sm" variant="full" className="justify-center" />
+            <p className="text-[9px] text-slate-400 font-bold uppercase mt-3 tracking-widest">
+              Entidad de Co-Certificación Autorizada
+            </p>
           </div>
 
           {/* Action Buttons */}
