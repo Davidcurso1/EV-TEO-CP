@@ -232,6 +232,30 @@ export default function ExamResultCard({
                 Local Guardado
               </span>
             </div>
+
+            {syncStatus.message && (syncStatus.message.includes("doPost") || syncStatus.message.includes("Apps Script") || syncStatus.message.includes("Google Sheets") || syncStatus.message.includes("Configuración")) && (
+              <div className="mt-2 bg-white/70 rounded-xl p-3 border border-amber-200 text-[11px] leading-relaxed text-amber-950 space-y-2">
+                <p className="font-bold text-amber-900 flex items-center gap-1">
+                  🔧 ¿Cómo solucionar este error en tu Google Sheets / Apps Script?
+                </p>
+                <p className="opacity-90">
+                  Google indica que la Web App no contiene o no encuentra la función de registro (<code className="bg-amber-100/80 px-1 py-0.5 rounded font-mono font-bold">doPost</code>). Sigue estos pasos sencillos para activarla:
+                </p>
+                <ol className="list-decimal pl-4 space-y-1 opacity-90 font-medium">
+                  <li>Abre tu hoja de cálculo de Google Sheets y haz clic en <b>Extensiones &gt; Apps Script</b>.</li>
+                  <li>Asegúrate de copiar y pegar el código completo del archivo <code className="bg-amber-100/80 px-1 py-0.5 rounded font-mono">apps-script.js</code> (comprueba que incluya la función <code className="bg-amber-100/80 px-1 py-0.5 rounded font-mono">doPost</code>).</li>
+                  <li>Presiona <kbd className="bg-slate-100 px-1 py-0.5 rounded font-mono border shadow-sm text-[10px]">Ctrl + S</kbd> o haz clic en el icono del <b>Disco de Guardar</b> en el editor. <i>¡Este paso es indispensable!</i></li>
+                  <li>Haz clic en el botón <b>Implementar</b> (Deploy) arriba a la derecha y selecciona <b>Administrar implementaciones</b> (Manage deployments).</li>
+                  <li>Haz clic en el icono de <b>Editar (Lápiz)</b> en la implementación activa.</li>
+                  <li>En el menú desplegable de "Versión", selecciona obligatoriamente <b>"Nueva versión"</b> (New version).</li>
+                  <li>Haz clic en el botón azul de abajo <b>Implementar</b> (Deploy) y luego haz clic en "Listo".</li>
+                </ol>
+                <p className="text-[10px] text-amber-800 italic font-semibold pt-1 border-t border-amber-200/50">
+                  ⚠️ Nota: Guardar el script con Ctrl+S no actualiza la Web App de forma automática. Siempre debes crear una "Nueva versión" en el menú de implementaciones de Google.
+                </p>
+              </div>
+            )}
+
             <div className="flex gap-2 justify-end mt-1">
               <button
                 onClick={() => triggerSync(finalResultPayload)}
