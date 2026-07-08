@@ -118,7 +118,7 @@ export default function ExamResultCard({
       console.warn("La API del servidor falló o no está disponible. Intentando conexión directa con Google Sheets...", error);
       setSyncStatus({ status: "syncing", message: "Intentando guardado directo en Google Sheets..." });
       
-      const googleScriptUrl = "https://script.google.com/macros/s/AKfycbz-71DSfUE2B-zOgtRHfQcsUBCYexISQKBtaJsBF8lJ_0qqzkoBQUOtsdY86MJeRj9I/exec";
+      const googleScriptUrl = "https://script.google.com/macros/s/AKfycbworXrC2HyYmojSnabaeKozec8xeYNH4wIZ8HASXHFRA_ujTd2o1NhvJxZtn5-ofUVqFA/exec";
       
       try {
         // Try direct fetch with text/plain to avoid preflight issues
