@@ -101,24 +101,39 @@ export default function ExamResultCard({
       });
 
       const contentType = response.headers.get("content-type") || "";
-      if (response.ok && contentType.includes("application/json")) {
+      if (contentType.includes("application/json")) {
         const data = await response.json();
-        if (data.success) {
+        if (response.ok && data.success) {
           setSyncStatus({ 
             status: "success", 
             message: data.message || "Resultados guardados y sincronizados con Google Sheets" 
           });
           return;
+        } else {
+          // Throw the specific error message from the server proxy
+          throw new Error(data.message || "La Web App de Google Apps Script no pudo registrar los datos.");
         }
       }
       
-      // If we got here, server API returned non-ok or non-JSON. Fall through to direct saving.
       throw new Error("El proxy del servidor no está disponible o devolvió un formato incorrecto.");
     } catch (error) {
-      console.warn("La API del servidor falló o no está disponible. Intentando conexión directa con Google Sheets...", error);
+      console.warn("La API del servidor falló o reportó un problema:", error);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      
+      // If the error is an explicit Apps Script configuration/runtime error, do not attempt fallback
+      // as it will encounter the same issue, instead display the clear troubleshooting message.
+      if (errorMsg.includes("Apps Script") || errorMsg.includes("Google Sheets") || errorMsg.includes("Configuración")) {
+        setSyncStatus({ 
+          status: "error", 
+          message: errorMsg,
+          savedLocal: true
+        });
+        return;
+      }
+
       setSyncStatus({ status: "syncing", message: "Intentando guardado directo en Google Sheets..." });
       
-      const googleScriptUrl = "https://script.google.com/macros/s/AKfycbworXrC2HyYmojSnabaeKozec8xeYNH4wIZ8HASXHFRA_ujTd2o1NhvJxZtn5-ofUVqFA/exec";
+      const googleScriptUrl = "https://script.google.com/macros/s/15fOwuhgji9xjI5gOWFO2QZRnrKw-_ugp1jXVTV5akUiahWmdQqoKQYI9/exec";
       
       try {
         // Try direct fetch with text/plain to avoid preflight issues
@@ -130,14 +145,30 @@ export default function ExamResultCard({
           body: JSON.stringify(payload)
         });
 
-        // Some Google script setups might return success but trigger redirect that throws CORS.
-        // If we didn't throw, assume success!
+        const responseText = await directResponse.text();
+        if (responseText.includes("Script function not found") || responseText.includes("doPost") || responseText.includes("doGet")) {
+          throw new Error("Error de Apps Script: No se encontró la función 'doPost' en el script de Google. Por favor, guarde y cree una NUEVA implementación en Google Apps Script.");
+        } else if (responseText.includes("The JavaScript runtime exited unexpectedly")) {
+          throw new Error("Error en Google Sheets: El motor de Apps Script falló. Asegúrese de que el script esté vinculado a su hoja de cálculo.");
+        }
+
         setSyncStatus({ 
           status: "success", 
           message: "Resultados guardados directamente en Google Sheets" 
         });
       } catch (directError) {
         console.warn("Fallo con CORS directo, intentando con modo no-cors como alternativa...", directError);
+        const directErrorMsg = directError instanceof Error ? directError.message : String(directError);
+        
+        if (directErrorMsg.includes("Apps Script") || directErrorMsg.includes("Google Sheets")) {
+          setSyncStatus({ 
+            status: "error", 
+            message: directErrorMsg,
+            savedLocal: true
+          });
+          return;
+        }
+
         try {
           // Send request with no-cors. The request will reach Google and write to Sheets,
           // even if the browser block reading the response back.

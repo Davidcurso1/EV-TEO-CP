@@ -18,7 +18,7 @@ const app = express();
 const PORT = 3000;
 const GOOGLE_APPS_SCRIPT_URL = 
   process.env.GOOGLE_APPS_SCRIPT_URL || 
-  "https://script.google.com/macros/s/AKfycbworXrC2HyYmojSnabaeKozec8xeYNH4wIZ8HASXHFRA_ujTd2o1NhvJxZtn5-ofUVqFA/exec";
+  "https://script.google.com/macros/s/15fOwuhgji9xjI5gOWFO2QZRnrKw-_ugp1jXVTV5akUiahWmdQqoKQYI9/exec";
 
 // Parse JSON request bodies
 app.use(express.json());
@@ -179,17 +179,43 @@ app.post("/api/results", async (req, res) => {
 
     if (response.ok) {
       let responseData;
+      let isJson = false;
       try {
         responseData = JSON.parse(responseText);
+        isJson = true;
       } catch (e) {
         responseData = { message: responseText };
       }
 
-      return res.json({
-        success: true,
-        message: "Resultados sincronizados con Google Sheets correctamente a través de Apps Script.",
-        details: responseData
-      });
+      if (isJson && responseData.success === true) {
+        return res.json({
+          success: true,
+          message: "Resultados guardados y sincronizados con Google Sheets correctamente.",
+          details: responseData
+        });
+      } else {
+        let errorMsg = "La respuesta de Google Apps Script no fue válida.";
+        if (!isJson) {
+          if (responseText.includes("Script function not found: doPost") || responseText.includes("doPost")) {
+            errorMsg = "Error de Apps Script: No se encontró la función 'doPost'. Asegúrate de guardar el script y crear una NUEVA implementación de Aplicación Web en el editor de Google Apps Script.";
+          } else if (responseText.includes("Script function not found: doGet") || responseText.includes("doGet")) {
+            errorMsg = "Error de Apps Script: No se encontró la función 'doGet' en el script de Google.";
+          } else if (responseText.includes("The JavaScript runtime exited unexpectedly")) {
+            errorMsg = "Error en Google Sheets: El motor de Apps Script falló. Asegúrate de que el script esté vinculado (Extensiones > Apps Script) a tu archivo de cálculo de Google Sheets.";
+          } else {
+            errorMsg = "Error de Configuración: El script devolvió una página HTML en vez de una confirmación JSON. Verifica que la aplicación web esté desplegada con acceso configurado para 'Cualquiera' (Anyone) y que hayas completado el flujo de autorización.";
+          }
+        } else {
+          errorMsg = responseData.error || responseData.message || errorMsg;
+        }
+
+        return res.status(400).json({
+          success: false,
+          message: errorMsg,
+          error: responseText,
+          savedLocal: true
+        });
+      }
     } else {
       return res.status(response.status).json({
         success: false,
