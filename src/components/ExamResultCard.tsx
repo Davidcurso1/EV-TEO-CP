@@ -28,9 +28,18 @@ interface ExamResultCardProps {
   answers: AnswerDetail[];
   timeSpent: string;
   onRestart: () => void;
+  googleToken?: string | null;
+  spreadsheetId?: string | null;
 }
 
-export default function ExamResultCard({ registration, answers, timeSpent, onRestart }: ExamResultCardProps) {
+export default function ExamResultCard({ 
+  registration, 
+  answers, 
+  timeSpent, 
+  onRestart,
+  googleToken,
+  spreadsheetId
+}: ExamResultCardProps) {
   const [syncStatus, setSyncStatus] = useState<SyncStatus>({ status: "idle" });
   const [showDetails, setShowDetails] = useState(false);
   const isMounted = useRef(false);
@@ -85,12 +94,24 @@ export default function ExamResultCard({ registration, answers, timeSpent, onRes
     setSyncStatus({ status: "syncing", message: "Conectando con Google Sheets..." });
     
     try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json"
+      };
+
+      if (googleToken) {
+        headers["Authorization"] = `Bearer ${googleToken}`;
+      }
+
+      const bodyPayload = {
+        ...payload,
+        accessToken: googleToken,
+        spreadsheetId: spreadsheetId
+      };
+
       const response = await fetch("/api/results", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
+        headers,
+        body: JSON.stringify(bodyPayload)
       });
 
       const data = await response.json();
@@ -98,7 +119,7 @@ export default function ExamResultCard({ registration, answers, timeSpent, onRes
       if (response.ok && data.success) {
         setSyncStatus({ 
           status: "success", 
-          message: "Resultados guardados y sincronizados con Google Sheets" 
+          message: data.message || "Resultados guardados y sincronizados con Google Sheets" 
         });
       } else {
         setSyncStatus({ 

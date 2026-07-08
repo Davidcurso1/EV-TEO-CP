@@ -8,6 +8,8 @@ import path from "path";
 import dotenv from "dotenv";
 import { createServer as createViteServer } from "vite";
 import { QUESTION_BANK } from "./src/data/questions";
+import { parseGoogleDocJSON } from "./src/utils/googleDocsParser";
+import { writeResultsToSheets } from "./src/utils/googleSheetsWriter";
 
 // Load environment variables
 dotenv.config();
@@ -31,17 +33,52 @@ function getRandomQuestions(count = 30) {
 
 /**
  * GET /api/questions
- * Attempts to retrieve questions dynamically from the Google Apps Script Web App.
- * If that fails or is not configured, it returns a randomized set of 30 high-quality
- * questions from our local QUESTION_BANK fallback.
+ * Attempts to retrieve questions dynamically from Google Docs using user's OAuth access token.
+ * Falls back to Google Apps Script Web App or our local QUESTION_BANK fallback.
  */
 app.get("/api/questions", async (req, res) => {
+  const authHeader = req.headers["authorization"] || "";
+  const token = authHeader.replace(/^bearer\s+/i, "").trim();
+  const customDocId = req.query.docId as string;
+  const docId = customDocId || "14-Joj8-p_t9DkgKRb7Og23Xh_XrXDSqd3RZIEwhCOD4";
+
+  // 1. Try DIRECT Google Docs API fetch if OAuth token is provided
+  if (token) {
+    try {
+      console.log(`[API] Intentando obtener preguntas DIRECTAMENTE de Google Docs API para Documento: ${docId}`);
+      const response = await fetch(`https://docs.google.com/v1/documents/${docId}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Accept": "application/json"
+        }
+      });
+
+      if (response.ok) {
+        const docData = await response.json();
+        const parsedQuestions = parseGoogleDocJSON(docData);
+        
+        if (parsedQuestions.length > 0) {
+          console.log(`[API] Se obtuvieron y procesaron ${parsedQuestions.length} preguntas DIRECTAMENTE de Google Docs API.`);
+          // Return up to 30 random questions
+          const shuffled = parsedQuestions.sort(() => 0.5 - Math.random()).slice(0, 30);
+          return res.json({
+            source: "google_docs_direct",
+            questions: shuffled
+          });
+        }
+      } else {
+        console.warn(`[API] Google Docs API devolvió código de error: ${response.status}`);
+      }
+    } catch (directErr) {
+      console.error("[API] Error al consultar Google Docs API directamente:", directErr);
+    }
+  }
+
+  // 2. Try Google Apps Script fallback if configured
   try {
-    // If the URL is set, we try to fetch questions
     if (GOOGLE_APPS_SCRIPT_URL) {
       console.log(`[API] Intentando obtener preguntas desde Google Apps Script: ${GOOGLE_APPS_SCRIPT_URL}`);
       
-      // We set a short timeout (e.g., 5 seconds) to prevent stalling the user experience
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
 
@@ -61,10 +98,9 @@ app.get("/api/questions", async (req, res) => {
             const data = await response.json();
             if (Array.isArray(data) && data.length > 0) {
               console.log(`[API] Se obtuvieron ${data.length} preguntas desde Google Apps Script.`);
-              // Return up to 30 random questions from the fetched list
               const shuffled = data.sort(() => 0.5 - Math.random()).slice(0, 30);
               return res.json({
-                source: "google_docs",
+                source: "google_docs_apps_script",
                 questions: shuffled
               });
             }
@@ -75,7 +111,7 @@ app.get("/api/questions", async (req, res) => {
       }
     }
     
-    // Fallback: local questions
+    // 3. Absolute Fallback: local questions
     console.log("[API] Usando banco de preguntas local como fallback.");
     const questions = getRandomQuestions(30);
     return res.json({
@@ -84,7 +120,6 @@ app.get("/api/questions", async (req, res) => {
     });
   } catch (error) {
     console.error("[API] Error crítico en GET /api/questions:", error);
-    // Bulletproof fallback
     const questions = getRandomQuestions(30);
     return res.json({
       source: "local_fallback_error",
@@ -96,38 +131,52 @@ app.get("/api/questions", async (req, res) => {
 
 /**
  * POST /api/results
- * Forwards exam results to Google Sheets via Google Apps Script Web App.
+ * Forwards exam results directly to Google Sheets using user's OAuth token or falls back to Google Apps Script.
  */
 app.post("/api/results", async (req, res) => {
   try {
     const payload = req.body;
-    console.log("[API] Recibiendo resultados de examen:", payload.nombreCompleto);
+    const authHeader = req.headers["authorization"] || "";
+    const token = authHeader.replace(/^bearer\s+/i, "").trim() || payload.accessToken;
+    const spreadsheetId = payload.spreadsheetId;
 
+    console.log("[API] Recibiendo resultados de examen para:", payload.nombreCompleto);
+
+    // 1. Try DIRECT Google Sheets API write if both token and spreadsheetId are provided
+    if (token && spreadsheetId) {
+      try {
+        console.log(`[API] Intentando guardar resultados DIRECTAMENTE en Google Sheet: ${spreadsheetId}`);
+        const writeResult = await writeResultsToSheets(spreadsheetId, token, payload);
+        return res.json(writeResult);
+      } catch (directWriteErr) {
+        console.error("[API] Error al escribir directamente en Google Sheets:", directWriteErr);
+        // Fall through to Apps Script or standard error handling
+      }
+    }
+
+    // 2. Fall back to Google Apps Script
     if (!GOOGLE_APPS_SCRIPT_URL) {
       return res.status(501).json({
         success: false,
-        message: "Google Apps Script URL no configurada en el servidor.",
+        message: "Google Apps Script URL no configurada en el servidor y no se proporcionó SpreadsheetId con OAuth token.",
         savedLocal: true
       });
     }
 
-    console.log("[API] Enviando resultados a Google Sheets...");
+    console.log("[API] Enviando resultados a Google Apps Script...");
     
-    // We send a POST request with the results
     const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(payload),
-      redirect: "follow" // Essential for Apps Script redirects
+      redirect: "follow"
     });
 
     const responseText = await response.text();
     console.log(`[API] Respuesta de Google Apps Script (status ${response.status}):`, responseText);
 
-    // Google Apps Script redirects with 302, and standard node-fetch handles redirect.
-    // If successful, it typically returns 200 after redirect with a response text like "Success" or JSON.
     if (response.ok) {
       let responseData;
       try {
@@ -138,7 +187,7 @@ app.post("/api/results", async (req, res) => {
 
       return res.json({
         success: true,
-        message: "Resultados sincronizados con Google Sheets correctamente.",
+        message: "Resultados sincronizados con Google Sheets correctamente a través de Apps Script.",
         details: responseData
       });
     } else {
@@ -150,7 +199,7 @@ app.post("/api/results", async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("[API] Error al enviar resultados a Google Sheets:", error);
+    console.error("[API] Error al enviar resultados:", error);
     return res.status(500).json({
       success: false,
       message: "No se pudo conectar con el servidor de Google Sheets. Los datos se guardarán localmente.",
