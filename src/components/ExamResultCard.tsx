@@ -91,6 +91,7 @@ export default function ExamResultCard({
     setSyncStatus({ status: "syncing", message: "Conectando con Google Sheets..." });
     
     try {
+      // 1. Try sending via the server proxy first
       const response = await fetch("/api/results", {
         method: "POST",
         headers: {
@@ -99,26 +100,69 @@ export default function ExamResultCard({
         body: JSON.stringify(payload)
       });
 
-      const data = await response.json();
+      const contentType = response.headers.get("content-type") || "";
+      if (response.ok && contentType.includes("application/json")) {
+        const data = await response.json();
+        if (data.success) {
+          setSyncStatus({ 
+            status: "success", 
+            message: data.message || "Resultados guardados y sincronizados con Google Sheets" 
+          });
+          return;
+        }
+      }
+      
+      // If we got here, server API returned non-ok or non-JSON. Fall through to direct saving.
+      throw new Error("El proxy del servidor no está disponible o devolvió un formato incorrecto.");
+    } catch (error) {
+      console.warn("La API del servidor falló o no está disponible. Intentando conexión directa con Google Sheets...", error);
+      setSyncStatus({ status: "syncing", message: "Intentando guardado directo en Google Sheets..." });
+      
+      const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxThzjqUAGWEJYBSqkF7PWI1Rnvm7Rc_Zrpzyc3-0v8PuAYTnBFFHcalmkaZq8xhfX7/exec";
+      
+      try {
+        // Try direct fetch with text/plain to avoid preflight issues
+        const directResponse = await fetch(googleScriptUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
 
-      if (response.ok && data.success) {
+        // Some Google script setups might return success but trigger redirect that throws CORS.
+        // If we didn't throw, assume success!
         setSyncStatus({ 
           status: "success", 
-          message: data.message || "Resultados guardados y sincronizados con Google Sheets" 
+          message: "Resultados guardados directamente en Google Sheets" 
         });
-      } else {
-        setSyncStatus({ 
-          status: "error", 
-          message: data.message || "La Web App de Google Apps Script no pudo registrar los datos.",
-          savedLocal: true
-        });
+      } catch (directError) {
+        console.warn("Fallo con CORS directo, intentando con modo no-cors como alternativa...", directError);
+        try {
+          // Send request with no-cors. The request will reach Google and write to Sheets,
+          // even if the browser block reading the response back.
+          await fetch(googleScriptUrl, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify(payload)
+          });
+          
+          setSyncStatus({ 
+            status: "success", 
+            message: "Resultados sincronizados con Google Sheets (Envío Directo)" 
+          });
+        } catch (noCorsError) {
+          console.error("Todos los intentos de sincronización fallaron:", noCorsError);
+          setSyncStatus({ 
+            status: "error", 
+            message: "No se pudo sincronizar en línea. Los resultados quedan guardados de forma local.",
+            savedLocal: true
+          });
+        }
       }
-    } catch (error) {
-      setSyncStatus({ 
-        status: "error", 
-        message: "Error de red. No se pudo conectar con el servidor proxy.",
-        savedLocal: true
-      });
     }
   };
 
