@@ -3,31 +3,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { User } from "firebase/auth";
 import { 
-  Car, 
   Compass, 
   AlertCircle, 
   ShieldCheck, 
-  Play, 
-  HelpCircle, 
-  HelpCircle as QuestionIcon,
-  RefreshCw,
   Clock,
-  Database,
-  Link,
-  LogOut,
-  CheckCircle2
+  Database
 } from "lucide-react";
 import Header from "./components/Header";
 import RegistrationForm from "./components/RegistrationForm";
 import ExamSession from "./components/ExamSession";
 import ExamResultCard from "./components/ExamResultCard";
 import { UserRegistration, Question, AnswerDetail } from "./types";
-import { initAuth, googleSignIn, logout } from "./lib/firebase";
-import { extractSpreadsheetId } from "./utils/googleSheetsWriter";
 
 type Step = "registration" | "loading" | "exam" | "results";
 
@@ -39,73 +28,6 @@ export default function App() {
   const [timeSpent, setTimeSpent] = useState<string>("00:00");
   const [loadingText, setLoadingText] = useState("");
   const [error, setError] = useState<string | null>(null);
-
-  // Google Integration states
-  const [user, setUser] = useState<User | null>(null);
-  const [googleToken, setGoogleToken] = useState<string | null>(null);
-  const [spreadsheetUrl, setSpreadsheetUrl] = useState<string>(() => {
-    return localStorage.getItem("vialpro_spreadsheet_url") || "";
-  });
-  const [googleError, setGoogleError] = useState<string | null>(null);
-
-  // Initialize Auth state listener
-  useEffect(() => {
-    const unsubscribe = initAuth(
-      (currentUser, token) => {
-        setUser(currentUser);
-        setGoogleToken(token);
-        console.log("[Auth] Usuario conectado:", currentUser.displayName);
-      },
-      () => {
-        setUser(null);
-        setGoogleToken(null);
-        console.log("[Auth] Sin sesión de Google activa.");
-      }
-    );
-    return () => unsubscribe();
-  }, []);
-
-  const handleGoogleLogin = async () => {
-    setGoogleError(null);
-    try {
-      const res = await googleSignIn();
-      if (res) {
-        setUser(res.user);
-        setGoogleToken(res.accessToken);
-      }
-    } catch (err: any) {
-      console.error("Error en login de Google:", err);
-      // Check for standard user closure / cancellation to handle elegantly
-      const isClosedByUser = err && (
-        err.code === "auth/popup-closed-by-user" || 
-        err.code === "auth/cancelled-by-user" ||
-        String(err.message || "").includes("popup-closed-by-user") ||
-        String(err.message || "").includes("cancelled-by-user")
-      );
-      
-      if (isClosedByUser) {
-        setGoogleError("El inicio de sesión fue cancelado (se cerró la ventana).");
-      } else {
-        setGoogleError("Ocurrió un error al conectar con Google. Por favor, reintente.");
-      }
-    }
-  };
-
-  const handleGoogleLogout = async () => {
-    try {
-      await logout();
-      setUser(null);
-      setGoogleToken(null);
-      setGoogleError(null);
-    } catch (err) {
-      console.error("Error al cerrar sesión:", err);
-    }
-  };
-
-  const handleSpreadsheetUrlChange = (value: string) => {
-    setSpreadsheetUrl(value);
-    localStorage.setItem("vialpro_spreadsheet_url", value);
-  };
 
   // Trigger when form is submitted
   const handleRegistrationSubmit = async (data: UserRegistration) => {
@@ -124,9 +46,6 @@ export default function App() {
       const headers: Record<string, string> = {
         "Accept": "application/json"
       };
-      if (googleToken) {
-        headers["Authorization"] = `Bearer ${googleToken}`;
-      }
 
       const response = await fetch("/api/questions", { headers });
       
@@ -201,87 +120,18 @@ export default function App() {
                 Bienvenido al portal oficial de evaluación técnica. Complete la información requerida para habilitar su examen de 30 preguntas.
               </p>
 
-              {/* Google Workspace Integration Card */}
+              {/* Informative Auto-Sync Card */}
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                 <div className="flex items-center gap-2 text-slate-800">
-                  <Database className="w-5 h-5 text-blue-600 animate-pulse" />
+                  <Database className="w-5 h-5 text-emerald-600 animate-pulse" />
                   <h4 className="font-sans font-bold text-xs uppercase tracking-wider text-slate-700">
-                    Google Workspace
+                    Sincronización Automática
                   </h4>
                 </div>
                 
-                {!user ? (
-                  <div className="space-y-3">
-                    <p className="text-xs text-slate-500 leading-relaxed">
-                      Conéctate con tu cuenta de Google para sincronizar preguntas de Google Docs y guardar resultados en Google Sheets en tiempo real.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={handleGoogleLogin}
-                      className="w-full h-11 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-                    >
-                      <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                        <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114-3.414 0-6.19-2.775-6.19-6.19s2.776-6.19 6.19-6.19c1.55 0 2.962.576 4.05 1.517l3.111-3.111C19.14 2.651 15.932 1.5 12.24 1.5c-5.799 0-10.5 4.701-10.5 10.5s4.701 10.5 10.5 10.5c5.347 0 9.874-3.834 9.874-9.874 0-.573-.056-1.127-.16-1.654H12.24Z" />
-                      </svg>
-                      Conectar con Google
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2.5 p-2.5 bg-slate-50 rounded-xl border border-slate-100">
-                      {user.photoURL ? (
-                        <img src={user.photoURL} alt={user.displayName || ""} className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
-                      ) : (
-                        <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center">
-                          {user.displayName?.charAt(0) || "U"}
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-slate-800 truncate">{user.displayName}</p>
-                        <p className="text-[10px] text-slate-500 truncate">{user.email}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleGoogleLogout}
-                        className="p-1.5 hover:bg-slate-200 text-slate-400 hover:text-rose-600 rounded-lg transition-all cursor-pointer"
-                        title="Desconectar"
-                      >
-                        <LogOut className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-slate-600 uppercase flex items-center gap-1 ml-1">
-                        <Link className="w-3 h-3 text-blue-600" />
-                        URL de Google Sheet (Resultados)
-                      </label>
-                      <input
-                        type="text"
-                        value={spreadsheetUrl}
-                        onChange={(e) => handleSpreadsheetUrlChange(e.target.value)}
-                        placeholder="Pegue el enlace de su hoja de cálculo de Google..."
-                        className="w-full h-10 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all outline-none"
-                      />
-                      <p className="text-[9px] text-slate-400 leading-tight ml-1">
-                        Si se deja en blanco, se guardará en la pestaña por defecto del servidor.
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {googleError && (
-                  <div className="p-3 bg-slate-50 border border-slate-200 text-slate-600 text-[11px] rounded-xl flex items-start gap-1.5 leading-normal">
-                    <span className="flex-1 font-medium">{googleError}</span>
-                    <button 
-                      type="button"
-                      onClick={() => setGoogleError(null)}
-                      className="text-slate-400 hover:text-slate-600 font-bold text-sm px-1 line-height-none leading-none shrink-0"
-                      title="Cerrar"
-                    >
-                      ×
-                    </button>
-                  </div>
-                )}
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Tus respuestas y resultados finales se guardarán de manera <strong>100% automática</strong> y segura en el servidor central de Google Sheets al finalizar la prueba, sin necesidad de iniciar sesión o conectar una cuenta de Google.
+                </p>
 
                 <div className="grid grid-cols-2 gap-3.5 pt-1">
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 flex flex-col items-start">
@@ -407,8 +257,6 @@ export default function App() {
                     answers={answers}
                     timeSpent={timeSpent}
                     onRestart={handleRestart}
-                    googleToken={googleToken}
-                    spreadsheetId={spreadsheetUrl ? extractSpreadsheetId(spreadsheetUrl) : null}
                   />
                 </motion.div>
               )}

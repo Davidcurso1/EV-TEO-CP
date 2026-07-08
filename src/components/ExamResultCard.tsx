@@ -28,17 +28,13 @@ interface ExamResultCardProps {
   answers: AnswerDetail[];
   timeSpent: string;
   onRestart: () => void;
-  googleToken?: string | null;
-  spreadsheetId?: string | null;
 }
 
 export default function ExamResultCard({ 
   registration, 
   answers, 
   timeSpent, 
-  onRestart,
-  googleToken,
-  spreadsheetId
+  onRestart
 }: ExamResultCardProps) {
   const [syncStatus, setSyncStatus] = useState<SyncStatus>({ status: "idle" });
   const [showDetails, setShowDetails] = useState(false);
@@ -94,24 +90,12 @@ export default function ExamResultCard({
     setSyncStatus({ status: "syncing", message: "Conectando con Google Sheets..." });
     
     try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json"
-      };
-
-      if (googleToken) {
-        headers["Authorization"] = `Bearer ${googleToken}`;
-      }
-
-      const bodyPayload = {
-        ...payload,
-        accessToken: googleToken,
-        spreadsheetId: spreadsheetId
-      };
-
       const response = await fetch("/api/results", {
         method: "POST",
-        headers,
-        body: JSON.stringify(bodyPayload)
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
       });
 
       const data = await response.json();
