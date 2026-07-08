@@ -133,7 +133,7 @@ export default function ExamResultCard({
 
       setSyncStatus({ status: "syncing", message: "Intentando guardado directo en Google Sheets..." });
       
-      const googleScriptUrl = "https://script.google.com/macros/s/AKfycbyIsCdsqY9t5ym_X-g88wnkzalQTssSe6ORibS0lippK17_W_Xhmz4mnCk0e8wq15iIQw/exec";
+      const googleScriptUrl = "https://script.google.com/macros/s/AKfycbwNtM6-NrahFR-BNDRkrFYD-_3m0bhqKcBgOov8lbi46MFp6OlQG0arWVghpwVxcNK8qQ/exec";
       
       try {
         // Try direct fetch with text/plain to avoid preflight issues
