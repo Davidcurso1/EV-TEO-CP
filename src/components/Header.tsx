@@ -3,40 +3,30 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ShieldCheck, Car } from "lucide-react";
 import InscolsstLogo from "./InscolsstLogo";
+import SiecLogo from "./SiecLogo";
 
 export default function Header() {
   return (
-    <header className="bg-white border-b border-slate-200 px-4 sm:px-10 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3.5 w-full print:hidden">
-      <div className="flex items-center gap-4">
-        {/* VialPro Branding */}
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-black text-lg font-sans">
-            V
-          </div>
-          <div>
-            <h1 className="text-base sm:text-lg font-black tracking-tight text-slate-900 uppercase leading-none pb-0.5">VialPro</h1>
-            <p className="text-[9px] text-blue-600 font-bold tracking-widest uppercase leading-none">Seguridad Vial</p>
-          </div>
-        </div>
+    <header className="bg-black border-b border-neutral-900 px-6 sm:px-12 py-7 sm:py-9 flex flex-col lg:flex-row items-center justify-between gap-6 w-full print:hidden shadow-lg shadow-black/30 transition-all">
+      <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 justify-center lg:justify-start w-full lg:w-auto">
+        {/* Co-Branding INSCOLSST - Prominent, double-sized, and light variant */}
+        <InscolsstLogo size="lg" variant="light" className="flex shrink-0" />
 
-        {/* Divider line */}
-        <div className="h-8 w-[1px] bg-slate-200 hidden md:block"></div>
+        {/* Vertical divider visible on sm and up */}
+        <div className="h-10 w-[1px] bg-neutral-800 hidden sm:block"></div>
 
-        {/* Co-Branding INSCOLSST */}
-        <InscolsstLogo size="sm" className="hidden md:flex" />
+        {/* SIEC Logo - Light Blue, on the same line */}
+        <SiecLogo size="md" variant="light-blue" align="left" className="shrink-0" />
       </div>
 
-      <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-4 text-xs sm:text-sm font-medium text-slate-500 border-t border-slate-100 pt-2.5 md:pt-0 md:border-t-0">
-        <InscolsstLogo size="sm" className="md:hidden" />
-        
-        <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center justify-between lg:justify-end w-full lg:w-auto gap-4 text-xs sm:text-sm font-medium text-slate-300 border-t border-neutral-900 pt-4 lg:pt-0 lg:border-t-0">
+        <div className="flex items-center gap-3 ml-auto shrink-0">
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> 
-            <span className="text-[11px] font-semibold text-slate-500">Sistema en Línea</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> 
+            <span className="text-[11px] font-bold text-slate-200">Sistema en Línea</span>
           </span>
-          <span className="px-2 py-0.5 bg-slate-100 rounded-full text-[9px] font-semibold text-slate-600">v1.0.4</span>
+          <span className="px-2.5 py-0.5 bg-neutral-900 text-slate-300 rounded-full text-[9px] font-bold border border-neutral-800">v1.0.4</span>
         </div>
       </div>
     </header>

@@ -35,6 +35,8 @@ export default function InscolsstLogo({ className = "", variant = "full", size =
   // Blue: #002366 or deep navy blue
   // Yellow: #FFA500 or bright amber gold
   
+  const primaryColor = variant === "light" ? "#FFFFFF" : "#001F54";
+  
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
       {/* Precision Interlocking Crescent SVG Icon */}
@@ -45,10 +47,10 @@ export default function InscolsstLogo({ className = "", variant = "full", size =
         xmlns="http://www.w3.org/2000/svg"
         id="inscolsst-icon-svg"
       >
-        {/* Outer Circular Navy Blue Bracket */}
+        {/* Outer Circular Navy Blue/White Bracket */}
         <path 
           d="M 85,30 C 95,50 90,75 70,85 C 50,95 25,90 15,70 C 5,50 10,25 30,15 C 45,7 65,10 75,22" 
-          stroke="#001F54" 
+          stroke={primaryColor} 
           strokeWidth="11" 
           strokeLinecap="round" 
         />
@@ -61,10 +63,10 @@ export default function InscolsstLogo({ className = "", variant = "full", size =
           strokeLinecap="round" 
         />
 
-        {/* Inner Right Crescent Link (Navy Blue) - Interlocking */}
+        {/* Inner Right Crescent Link (Navy Blue/White) - Interlocking */}
         <path 
           d="M 54,62 C 64,62 71,55 71,46 C 71,37 64,30 54,30 C 47,30 43,34 41,38" 
-          stroke="#001F54" 
+          stroke={primaryColor} 
           strokeWidth="9" 
           strokeLinecap="round" 
         />

@@ -13,6 +13,7 @@ import {
   Database
 } from "lucide-react";
 import Header from "./components/Header";
+import SiecLogo from "./components/SiecLogo";
 import RegistrationForm from "./components/RegistrationForm";
 import ExamSession from "./components/ExamSession";
 import ExamResultCard from "./components/ExamResultCard";
@@ -303,7 +304,7 @@ export default function App() {
 
       {/* Sleek Global Footer */}
       <footer className="p-6 text-center text-slate-400 text-xs border-t border-slate-200 bg-white print:hidden">
-        © 2026 VialPro Evaluaciones Teóricas. Todos los derechos reservados.
+        © 2026 INSCOLSST - SIEC Sistema Integral de Evaluación de Competencias para la Conducción. Todos los derechos reservados.
       </footer>
     </div>
   );
