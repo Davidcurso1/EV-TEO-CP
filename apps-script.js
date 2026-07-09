@@ -218,7 +218,7 @@ function saveResultsToSheets(data) {
     resSheet.getRange("A1:N1").setFontWeight("bold").setBackground("#1e3a8a").setFontColor("white");
   }
   
-  // 2. Obtener o crear hoja "Detalles_Respuestas" para almacenar el detalle de las 30 preguntas
+  // 2. Obtener o crear hoja "Detalles_Respuestas" para almacenar el detalle de las preguntas
   let detailSheet = ss.getSheetByName("Detalles_Respuestas");
   if (!detailSheet) {
     detailSheet = ss.insertSheet("Detalles_Respuestas");
@@ -233,6 +233,28 @@ function saveResultsToSheets(data) {
       "¿Es Correcta?"
     ]);
     detailSheet.getRange("A1:H1").setFontWeight("bold").setBackground("#0f766e").setFontColor("white");
+  }
+
+  // 3. Obtener o crear hoja "Resultados_Por_Bloques" para almacenar estadísticas por bloques de preguntas
+  let blockSheet = ss.getSheetByName("Resultados_Por_Bloques");
+  if (!blockSheet) {
+    blockSheet = ss.insertSheet("Resultados_Por_Bloques");
+    blockSheet.appendRow([
+      "Fecha",
+      "Hora",
+      "Número Identificación",
+      "Nombre Completo",
+      "Bloque 1: Mecánica (Preguntas)",
+      "Bloque 1: Mecánica (Correctas)",
+      "Bloque 1: Mecánica (% Acierto)",
+      "Bloque 2: Seguridad Vial (Preguntas)",
+      "Bloque 2: Seguridad Vial (Correctas)",
+      "Bloque 2: Seguridad Vial (% Acierto)",
+      "Bloque 3: Normas de Tránsito (Preguntas)",
+      "Bloque 3: Normas de Tránsito (Correctas)",
+      "Bloque 3: Normas de Tránsito (% Acierto)"
+    ]);
+    blockSheet.getRange("A1:M1").setFontWeight("bold").setBackground("#7c3aed").setFontColor("white");
   }
   
   // Escribir fila en "Resultados"
@@ -254,6 +276,58 @@ function saveResultsToSheets(data) {
     data.puntaje,
     data.resultado,
     data.tiempoEmpleado
+  ]);
+
+  // Escribir fila en "Resultados_Por_Bloques"
+  let b1Total = 0, b1Correct = 0;
+  let b2Total = 0, b2Correct = 0;
+  let b3Total = 0, b3Correct = 0;
+
+  if (data.detalles && Array.isArray(data.detalles)) {
+    data.detalles.forEach(function(det) {
+      const qId = det.preguntaId || 0;
+      let block = 3;
+      if (qId >= 1 && qId <= 54) block = 1;
+      else if (qId >= 55 && qId <= 108) block = 2;
+      else if (qId >= 109 && qId <= 147) block = 3;
+      else {
+        const cat = (det.category || "").toLowerCase();
+        if (cat.indexOf("mecánica") !== -1 || cat.indexOf("mecanica") !== -1 || cat.indexOf("bloque 1") !== -1) block = 1;
+        else if (cat.indexOf("situación") !== -1 || cat.indexOf("situacion") !== -1 || cat.indexOf("vial") !== -1 || cat.indexOf("bloque 2") !== -1) block = 2;
+      }
+
+      const isCorrect = det.esCorrecta === true || det.esCorrecta === "SÍ";
+      if (block === 1) {
+        b1Total++;
+        if (isCorrect) b1Correct++;
+      } else if (block === 2) {
+        b2Total++;
+        if (isCorrect) b2Correct++;
+      } else if (block === 3) {
+        b3Total++;
+        if (isCorrect) b3Correct++;
+      }
+    });
+  }
+
+  const b1Pct = b1Total > 0 ? Math.round((b1Correct / b1Total) * 100) : 0;
+  const b2Pct = b2Total > 0 ? Math.round((b2Correct / b2Total) * 100) : 0;
+  const b3Pct = b3Total > 0 ? Math.round((b3Correct / b3Total) * 100) : 0;
+
+  blockSheet.appendRow([
+    fecha,
+    hora,
+    data.numeroIdentificacion,
+    data.nombreCompleto,
+    b1Total,
+    b1Correct,
+    b1Pct + "%",
+    b2Total,
+    b2Correct,
+    b2Pct + "%",
+    b3Total,
+    b3Correct,
+    b3Pct + "%"
   ]);
   
   // Escribir el detalle de las preguntas respondidas si están incluidas en el payload

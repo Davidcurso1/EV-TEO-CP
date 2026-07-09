@@ -66,9 +66,29 @@ export default function App() {
       await delay(600);
 
       if (fetchedQuestions.length === 0) {
-        // Shuffle local QUESTION_BANK and take up to 30
-        const shuffled = [...QUESTION_BANK].sort(() => 0.5 - Math.random()).slice(0, 30);
-        fetchedQuestions = shuffled;
+        // Select 40 questions proportionally by block (37.5% block 1, 37.5% block 2, 25% block 3)
+        const getBlockIndexForApp = (category: string, questionId: number): number => {
+          const cat = (category || "").toLowerCase();
+          if (questionId >= 1 && questionId <= 54) return 1;
+          if (questionId >= 55 && questionId <= 108) return 2;
+          if (questionId >= 109 && questionId <= 147) return 3;
+          if (cat.includes("mecánica") || cat.includes("mecanica") || cat.includes("kit") || cat.includes("bloque 1")) return 1;
+          if (cat.includes("situación") || cat.includes("situacion") || cat.includes("vial") || cat.includes("comportamiento") || cat.includes("maniobra") || cat.includes("señal") || cat.includes("senal") || cat.includes("auxilio") || cat.includes("riesgo") || cat.includes("pasiva") || cat.includes("prelación") || cat.includes("prelacion") || cat.includes("bloque 2")) return 2;
+          return 3;
+        };
+
+        const b1 = QUESTION_BANK.filter(q => getBlockIndexForApp(q.category, q.id) === 1);
+        const b2 = QUESTION_BANK.filter(q => getBlockIndexForApp(q.category, q.id) === 2);
+        const b3 = QUESTION_BANK.filter(q => getBlockIndexForApp(q.category, q.id) === 3);
+
+        const shuffleArray = (arr: typeof QUESTION_BANK) => [...arr].sort(() => 0.5 - Math.random());
+
+        // Target: 15 from block 1, 15 from block 2, 10 from block 3
+        const selected1 = shuffleArray(b1).slice(0, 15);
+        const selected2 = shuffleArray(b2).slice(0, 15);
+        const selected3 = shuffleArray(b3).slice(0, 10);
+
+        fetchedQuestions = shuffleArray([...selected1, ...selected2, ...selected3]);
         console.log("Banco de preguntas local cargado con éxito en el cliente:", fetchedQuestions.length);
       }
 
@@ -133,7 +153,7 @@ export default function App() {
                 EVALUACIÓN <span className="text-blue-600">TEÓRICA</span> PARA CONDUCTORES
               </h2>
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-                Bienvenido al portal oficial de evaluación técnica. Complete la información requerida para habilitar su examen de 30 preguntas.
+                Bienvenido al portal oficial de evaluación técnica. Complete la información requerida para habilitar su examen de 40 preguntas.
               </p>
 
               {/* Informative Auto-Sync Card */}
@@ -221,7 +241,7 @@ export default function App() {
                     {/* Subtext info */}
                     <div className="mt-8 p-4 bg-blue-50 border border-blue-100 rounded-2xl max-w-xs mx-auto">
                       <p className="text-xs text-blue-700 leading-relaxed">
-                        Recuerda que cada examen consta de <strong>30 preguntas</strong> seleccionadas de forma aleatoria para garantizar la integridad de la prueba.
+                        Recuerda que cada examen consta de <strong>40 preguntas</strong> seleccionadas de forma aleatoria para garantizar la integridad de la prueba.
                       </p>
                     </div>
                   </motion.div>

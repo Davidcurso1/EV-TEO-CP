@@ -43,6 +43,7 @@ export interface AnswerDetail {
   elegida: string;
   correcta: string;
   esCorrecta: boolean;
+  category?: string;
 }
 
 export interface ExamResult {

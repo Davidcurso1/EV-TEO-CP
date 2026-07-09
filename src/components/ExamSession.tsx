@@ -83,7 +83,8 @@ export default function ExamSession({ questions, onComplete, userName }: ExamSes
       pregunta: currentQuestion.question,
       elegida: currentQuestion.options[optionIndex],
       correcta: currentQuestion.options[currentQuestion.correctAnswer],
-      esCorrecta: isCorrect
+      esCorrecta: isCorrect,
+      category: currentQuestion.category
     };
 
     setAnswers((prev) => [...prev, newAnswer]);

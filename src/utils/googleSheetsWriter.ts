@@ -33,6 +33,21 @@ export function extractSpreadsheetId(urlOrId: string): string {
 }
 
 /**
+ * Helper to determine the block index for a question detail
+ */
+function getBlockFromDetail(det: any): number {
+  const qId = det.preguntaId || 0;
+  if (qId >= 1 && qId <= 54) return 1;
+  if (qId >= 55 && qId <= 108) return 2;
+  if (qId >= 109 && qId <= 147) return 3;
+
+  const cat = (det.category || "").toLowerCase();
+  if (cat.includes("mecánica") || cat.includes("mecanica") || cat.includes("bloque 1")) return 1;
+  if (cat.includes("situación") || cat.includes("situacion") || cat.includes("vial") || cat.includes("bloque 2")) return 2;
+  return 3;
+}
+
+/**
  * Writes exam results directly to Google Sheets using the Sheets API.
  * Ensures sheets "Resultados" and "Detalles_Respuestas" exist, creating them if necessary.
  */
@@ -73,6 +88,7 @@ export async function writeResultsToSheets(
 
     const hasResultados = sheetNames.includes("Resultados");
     const hasDetalles = sheetNames.includes("Detalles_Respuestas");
+    const hasBloques = sheetNames.includes("Resultados_Por_Bloques");
 
     // Step 2: Create sheets and add headers if they don't exist
     const requests: any[] = [];
@@ -87,6 +103,13 @@ export async function writeResultsToSheets(
       requests.push({
         addSheet: {
           properties: { title: "Detalles_Respuestas" }
+        }
+      });
+    }
+    if (!hasBloques) {
+      requests.push({
+        addSheet: {
+          properties: { title: "Resultados_Por_Bloques" }
         }
       });
     }
@@ -159,6 +182,34 @@ export async function writeResultsToSheets(
       );
     }
 
+    // Step 4.5: Write headers to "Resultados_Por_Bloques" if it was just created
+    if (!hasBloques) {
+      await fetch(
+        `https://sheets.googleapis.com/v1/spreadsheets/${parsedSpreadsheetId}/values/Resultados_Por_Bloques!A1:M1?valueInputOption=USER_ENTERED`,
+        {
+          method: "PUT",
+          headers,
+          body: JSON.stringify({
+            values: [[
+              "Fecha",
+              "Hora",
+              "Número Identificación",
+              "Nombre Completo",
+              "Bloque 1: Mecánica (Preguntas)",
+              "Bloque 1: Mecánica (Correctas)",
+              "Bloque 1: Mecánica (% Acierto)",
+              "Bloque 2: Seguridad Vial (Preguntas)",
+              "Bloque 2: Seguridad Vial (Correctas)",
+              "Bloque 2: Seguridad Vial (% Acierto)",
+              "Bloque 3: Normas de Tránsito (Preguntas)",
+              "Bloque 3: Normas de Tránsito (Correctas)",
+              "Bloque 3: Normas de Tránsito (% Acierto)"
+            ]]
+          })
+        }
+      );
+    }
+
     // Step 5: Append result row to "Resultados"
     const resultadosRow = [
       fecha,
@@ -191,6 +242,63 @@ export async function writeResultsToSheets(
     if (!appendRes.ok) {
       const errText = await appendRes.text();
       throw new Error(`Error al agregar fila a Resultados: ${errText}`);
+    }
+
+    // Calculate block statistics for block results sheet
+    let b1Total = 0, b1Correct = 0;
+    let b2Total = 0, b2Correct = 0;
+    let b3Total = 0, b3Correct = 0;
+
+    if (data.detalles && Array.isArray(data.detalles)) {
+      data.detalles.forEach((det: any) => {
+        const block = getBlockFromDetail(det);
+        const isCorrect = det.esCorrecta;
+        if (block === 1) {
+          b1Total++;
+          if (isCorrect) b1Correct++;
+        } else if (block === 2) {
+          b2Total++;
+          if (isCorrect) b2Correct++;
+        } else if (block === 3) {
+          b3Total++;
+          if (isCorrect) b3Correct++;
+        }
+      });
+    }
+
+    const b1Pct = b1Total > 0 ? Math.round((b1Correct / b1Total) * 100) : 0;
+    const b2Pct = b2Total > 0 ? Math.round((b2Correct / b2Total) * 100) : 0;
+    const b3Pct = b3Total > 0 ? Math.round((b3Correct / b3Total) * 100) : 0;
+
+    const bloquesRow = [
+      fecha,
+      hora,
+      data.numeroIdentificacion,
+      data.nombreCompleto,
+      b1Total,
+      b1Correct,
+      `${b1Pct}%`,
+      b2Total,
+      b2Correct,
+      `${b2Pct}%`,
+      b3Total,
+      b3Correct,
+      `${b3Pct}%`
+    ];
+
+    const appendBloquesRes = await fetch(
+      `https://sheets.googleapis.com/v1/spreadsheets/${parsedSpreadsheetId}/values/Resultados_Por_Bloques!A1:append?valueInputOption=USER_ENTERED`,
+      {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          values: [bloquesRow]
+        })
+      }
+    );
+
+    if (!appendBloquesRes.ok) {
+      console.warn("[Sheets] No se pudo agregar los resultados por bloques:", await appendBloquesRes.text());
     }
 
     // Step 6: Append detail rows to "Detalles_Respuestas" if present
